@@ -70,5 +70,405 @@
       "min_experience_years": 3,
       "is_active": true
     }
-  ]
+  ],
+  "demo-a1ea5f57-abfb-4536-afff-53d26c2af075": {
+    "id": "demo-a1ea5f57-abfb-4536-afff-53d26c2af075",
+    "candidate_id": "00000000-0000-0000-0000-000000000001",
+    "questions": [
+      {
+        "question_id": "q1",
+        "skill": "HTML & CSS",
+        "question_text": "Which of the following CSS properties would you use to create a responsive layout that adjusts according to the screen size?",
+        "options": {
+          "A": "position: relative;",
+          "B": "display: grid;",
+          "C": "flex-wrap: nowrap;",
+          "D": "float: left;"
+        },
+        "correct_answer": "B",
+        "difficulty": "medium"
+      },
+      {
+        "question_id": "q2",
+        "skill": "JavaScript",
+        "question_text": "In JavaScript, what will be the output of 'console.log(typeof NaN);'?",
+        "options": {
+          "A": "number",
+          "B": "NaN",
+          "C": "undefined",
+          "D": "object"
+        },
+        "correct_answer": "A",
+        "difficulty": "medium"
+      },
+      {
+        "question_id": "q3",
+        "skill": "Python",
+        "question_text": "When using list comprehensions in Python, which of the following is a correct syntax for creating a list of squares from 0 to 9?",
+        "options": {
+          "A": "[x^2 for x in range(10)]",
+          "B": "[x*x for x in range(10)]",
+          "C": "[x**2 in range(10)]",
+          "D": "(x**2 for x in range(10))"
+        },
+        "correct_answer": "B",
+        "difficulty": "medium"
+      },
+      {
+        "question_id": "q4",
+        "skill": "SQL",
+        "question_text": "Which SQL clause is used to remove duplicate rows from the result set?",
+        "options": {
+          "A": "UNIQUE",
+          "B": "DISTINCT",
+          "C": "REMOVE DUPLICATES",
+          "D": "NODUPLICATES"
+        },
+        "correct_answer": "B",
+        "difficulty": "easy"
+      },
+      {
+        "question_id": "q5",
+        "skill": "Basics of Java Programming",
+        "question_text": "In Java, which of the following is the correct way to declare a constant variable?",
+        "options": {
+          "A": "constant int MAX = 10;",
+          "B": "final int MAX = 10;",
+          "C": "static int MAX = 10;",
+          "D": "immutable int MAX = 10;"
+        },
+        "correct_answer": "B",
+        "difficulty": "beginner"
+      }
+    ],
+    "proctoring_consent": false,
+    "answers": {
+      "q1": "C",
+      "q2": "C",
+      "q3": "B",
+      "q4": "D",
+      "q5": "B"
+    },
+    "extracted_skills": [
+      {
+        "skill_name": "HTML & CSS",
+        "category": "Web Development",
+        "proficiency_claimed": "intermediate",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "JavaScript",
+        "category": "Web Development",
+        "proficiency_claimed": "intermediate",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Python",
+        "category": "Programming Language",
+        "proficiency_claimed": "intermediate",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "SQL",
+        "category": "Database Management",
+        "proficiency_claimed": "intermediate",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Basics of Java Programming",
+        "category": "Programming Language",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Basics of TensorFlow",
+        "category": "Machine Learning",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Operating Systems: Windows, Linux",
+        "category": "Operating Systems",
+        "proficiency_claimed": "intermediate",
+        "years_of_experience_claimed": 0
+      }
+    ],
+    "github_link": null,
+    "leetcode_link": null
+  },
+  "skills:00000000-0000-0000-0000-000000000001": {
+    "extracted_skills": [
+      {
+        "skill_name": "HTML & CSS",
+        "category": "Web Development",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "JavaScript",
+        "category": "Web Development",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Python",
+        "category": "Programming Language",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "SQL",
+        "category": "Database Management",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Java Programming",
+        "category": "Programming Language",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "TensorFlow",
+        "category": "Machine Learning",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Windows",
+        "category": "Operating System",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Linux",
+        "category": "Operating System",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      }
+    ],
+    "github_link": null,
+    "leetcode_link": null,
+    "linkedin_link": null
+  },
+  "demo-5a77b78e-32c1-43bf-9919-99ca72a7418c": {
+    "id": "demo-5a77b78e-32c1-43bf-9919-99ca72a7418c",
+    "candidate_id": "00000000-0000-0000-0000-000000000001",
+    "questions": [
+      {
+        "question_id": "q1",
+        "skill": "HTML & CSS",
+        "question_text": "Which of the following CSS properties can be used to control the space between the border and the content of an element?",
+        "options": {
+          "A": "padding",
+          "B": "margin",
+          "C": "border-spacing",
+          "D": "line-height"
+        },
+        "correct_answer": "A",
+        "difficulty": "medium"
+      },
+      {
+        "question_id": "q2",
+        "skill": "JavaScript",
+        "question_text": "What is the result of the JavaScript expression '0 == \"\"' and why?",
+        "options": {
+          "A": "false, because they are different types",
+          "B": "true, because JavaScript converts both to false",
+          "C": "false, because strict equality is not used",
+          "D": "true, because JavaScript coerces types"
+        },
+        "correct_answer": "D",
+        "difficulty": "medium"
+      },
+      {
+        "question_id": "q3",
+        "skill": "Python",
+        "question_text": "What will be the output of the following Python code snippet: 'print([i for i in range(5) if i%2 == 0])'?",
+        "options": {
+          "A": "[0, 2, 4]",
+          "B": "[0, 1, 2, 3, 4]",
+          "C": "[1, 3]",
+          "D": "[1, 2, 3, 4]"
+        },
+        "correct_answer": "A",
+        "difficulty": "easy"
+      },
+      {
+        "question_id": "q4",
+        "skill": "SQL",
+        "question_text": "Which SQL clause is used to ensure that a specified condition is met for all rows returned by a query?",
+        "options": {
+          "A": "WHERE",
+          "B": "GROUP BY",
+          "C": "HAVING",
+          "D": "ORDER BY"
+        },
+        "correct_answer": "A",
+        "difficulty": "medium"
+      },
+      {
+        "question_id": "q5",
+        "skill": "TensorFlow",
+        "question_text": "In TensorFlow, what is the purpose of the 'tf.Session' object?",
+        "options": {
+          "A": "To create a tensor",
+          "B": "To define a computational graph",
+          "C": "To execute operations and evaluate tensors",
+          "D": "To initialize variables"
+        },
+        "correct_answer": "C",
+        "difficulty": "hard"
+      }
+    ],
+    "proctoring_consent": false,
+    "answers": {
+      "q1": "B",
+      "q2": "B",
+      "q3": "D",
+      "q4": "B",
+      "q5": "C"
+    },
+    "extracted_skills": [
+      {
+        "skill_name": "HTML & CSS",
+        "category": "Web Development",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "JavaScript",
+        "category": "Web Development",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Python",
+        "category": "Programming Language",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "SQL",
+        "category": "Database Management",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Java Programming",
+        "category": "Programming Language",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "TensorFlow",
+        "category": "Machine Learning",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Windows",
+        "category": "Operating System",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      },
+      {
+        "skill_name": "Linux",
+        "category": "Operating System",
+        "proficiency_claimed": "beginner",
+        "years_of_experience_claimed": 0
+      }
+    ],
+    "github_link": null,
+    "leetcode_link": null
+  },
+  "roadmap:00000000-0000-0000-0000-000000000001": {
+    "candidate_id": "00000000-0000-0000-0000-000000000001",
+    "test_session_id": "demo-5a77b78e-32c1-43bf-9919-99ca72a7418c",
+    "score": 20.0,
+    "reality_check": "Your current skill level is significantly below market expectations for entry-level positions. To be competitive, you need to focus on deepening your understanding and practical experience in key areas.",
+    "roadmap": [
+      {
+        "skill_name": "HTML & CSS",
+        "gaps": [
+          "Basic layout structuring",
+          "Responsive design principles"
+        ],
+        "resources": [
+          {
+            "title": "Intro to HTML and CSS",
+            "url": "https://www.codecademy.com/learn/learn-html",
+            "type": "course"
+          },
+          {
+            "title": "Responsive Web Design Basics",
+            "url": "https://developers.google.com/web/fundamentals/design-and-ux/responsive",
+            "type": "docs"
+          }
+        ],
+        "estimated_weeks": 2
+      },
+      {
+        "skill_name": "JavaScript",
+        "gaps": [
+          "Basic syntax and control structures",
+          "DOM manipulation"
+        ],
+        "resources": [
+          {
+            "title": "JavaScript Basics",
+            "url": "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/basic-javascript/",
+            "type": "course"
+          },
+          {
+            "title": "JavaScript DOM Manipulation",
+            "url": "https://www.w3schools.com/js/js_htmldom.asp",
+            "type": "docs"
+          }
+        ],
+        "estimated_weeks": 2
+      },
+      {
+        "skill_name": "Python",
+        "gaps": [
+          "Basic syntax and data types",
+          "Simple scripting"
+        ],
+        "resources": [
+          {
+            "title": "Python for Everybody",
+            "url": "https://www.coursera.org/specializations/python",
+            "type": "course"
+          },
+          {
+            "title": "Python Documentation",
+            "url": "https://docs.python.org/3/tutorial/index.html",
+            "type": "docs"
+          }
+        ],
+        "estimated_weeks": 2
+      },
+      {
+        "skill_name": "SQL",
+        "gaps": [
+          "Basic queries",
+          "Data retrieval"
+        ],
+        "resources": [
+          {
+            "title": "SQL for Beginners",
+            "url": "https://www.udacity.com/course/sql-for-data-analysis--ud198",
+            "type": "course"
+          },
+          {
+            "title": "SQL Tutorial",
+            "url": "https://www.w3schools.com/sql/",
+            "type": "docs"
+          }
+        ],
+        "estimated_weeks": 2
+      }
+    ],
+    "retake_available_at": "2026-06-24T13:38:33.996244+00:00"
+  }
 }

@@ -34,9 +34,39 @@ def save_summary_node(state: SummarizerState):
     client = get_supabase()
     session_id = state["interview_session_id"]
     
+    # --- DEMO BYPASS START ---
+    from app.services import session_store
+    cached_session = session_store.get_session(f"interview_session:{session_id}")
+    if cached_session or not client:
+        if not cached_session:
+            cached_session = {
+                "id": session_id,
+                "application_id": "demo-app-id",
+                "status": "completed",
+                "candidate_id": "00000000-0000-0000-0000-000000000001"
+            }
+        cached_session["summary"] = state.get("summary", {})
+        cached_session["status"] = "completed"
+        session_store.save_session(f"interview_session:{session_id}", cached_session)
+        
+        # update application in session store
+        app_id = cached_session.get("application_id")
+        if app_id:
+            # search for application and update status
+            all_sessions = session_store.get_all_sessions()
+            for key, val in all_sessions.items():
+                if key.startswith("applications:") and isinstance(val, list):
+                    for app in val:
+                        if app.get("id") == app_id:
+                            app["status"] = "interview_done"
+                            session_store.save_session(key, val)
+                            break
+        return {"interview_session_id": session_id}
+    # --- DEMO BYPASS END ---
+    
     # Needs to get application_id from session
     session = client.table("interview_sessions").select("application_id").eq("id", session_id).single().execute()
-    app_id = session.data.get("application_id")
+    app_id = session.data.get("application_id") if session.data else None
     
     client.table("interview_sessions").update({
         "summary": state.get("summary", {}),

@@ -117,13 +117,18 @@ def list_applications(user: dict = Depends(require_candidate)):
                     app["jobs"] = demo_job_map[jid]
                 else:
                     try:
-                        job_resp = client.table("jobs").select("*").eq("id", jid).single().execute()
-                        app["jobs"] = job_resp.data if job_resp.data else {"title": "Job", "location": "Remote"}
+                        if client:
+                            job_resp = client.table("jobs").select("*").eq("id", jid).single().execute()
+                            app["jobs"] = job_resp.data if job_resp.data else {"title": "Job", "location": "Remote"}
+                        else:
+                            app["jobs"] = {"title": "Job Listing", "location": "Remote"}
                     except Exception:
                         app["jobs"] = {"title": "Job Listing", "location": "Remote"}
         return apps
 
     client = get_supabase()
+    if not client:
+        return []
     resp = client.table("applications").select("*, jobs(*)").eq("candidate_id", user_id).order("created_at", desc=True).execute()
     return resp.data
 

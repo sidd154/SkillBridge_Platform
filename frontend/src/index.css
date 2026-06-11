@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-fintech-base: #181B26;
-  --color-fintech-surface: #262B3B;
-  --color-fintech-amber: #E8A830;
-  --color-fintech-amber-hover: #FBE09B;
-  --color-fintech-cream: #FCFAF7;
-  --color-fintech-sage: #85B597;
-  --color-fintech-ash: #9BA6BA;
+  --color-fintech-base: #F8FAFC;
+  --color-fintech-surface: #FFFFFF;
+  --color-fintech-amber: #D97706;
+  --color-fintech-amber-hover: #F59E0B;
+  --color-fintech-cream: #0F172A;
+  --color-fintech-sage: #0D9488;
+  --color-fintech-ash: #475569;
   
   --font-editorial: "Playfair Display", serif;
   --font-terminal: "DM Mono", monospace;
@@ -16,7 +16,7 @@
 
 @layer utilities {
   .border-fintech-border {
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -50,4 +50,81 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-fintech-amber);
+}
+
+/* FORCE GLOBAL LIGHT MODE OVERRIDES FOR HARDCODED DARK STYLES */
+body, 
+.bg-fintech-base, 
+[class*="bg-[#181B26]"],
+[class*="bg-[#181b26]"],
+[class*="bg-[#1C202E]"],
+[class*="bg-[#1c202e]"],
+[class*="bg-[#1E212E]"],
+[class*="bg-[#1e212e]"],
+[class*="bg-fintech-surface"] {
+  background-color: #F8FAFC !important;
+}
+
+[class*="bg-fintech-surface"],
+.bg-fintech-surface,
+[class*="bg-[#262B3B]"],
+[class*="bg-[#262b3b]"],
+[class*="bg-[#262B3B]/80"],
+[class*="bg-[#262B3B]/50"],
+[class*="bg-[#262b3b]/80"],
+[class*="bg-[#262b3b]/50"],
+[class*="bg-[#1A1D27]"],
+[class*="bg-[#1a1d27]"],
+[class*="bg-white/95"],
+[class*="bg-white/90"] {
+  background-color: #FFFFFF !important;
+}
+
+[class*="bg-[#202430]"],
+[class*="hover:bg-[#202430]"]:hover,
+[class*="hover:bg-[#1E212E]"]:hover,
+[class*="hover:bg-[#1e212e]"]:hover {
+  background-color: #F1F5F9 !important;
+}
+
+.text-fintech-cream,
+.text-fintech-ash,
+[class*="text-fintech-cream"],
+[class*="text-fintech-cream-hover"],
+[class*="text-fintech-ash"],
+[class*="text-[#FCFAF7]"],
+[class*="text-[#fcfaf7]"],
+[class*="text-[#9BA6BA]"],
+[class*="text-[#9ba6ba]"] {
+  color: #1E293B !important; /* Slate 800 dark text */
+}
+
+.border-fintech-border,
+[class*="border-fintech-border"],
+[class*="border-slate-850"],
+[class*="border-slate-800"],
+[class*="border-slate-700"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.text-fintech-ash {
+  color: #475569 !important;
+}
+
+/* Fix input text fields, textareas, selects */
+input, textarea, select {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* In-memory logs, terminal, and custom components */
+.bg-black, [class*="bg-black"], [class*="bg-[#181B26]"] pre {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+code, pre {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
 }

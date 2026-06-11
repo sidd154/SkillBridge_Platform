@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BrainCircuit, Loader2, Send, Terminal, PlayCircle, Check, X, TerminalSquare } from 'lucide-react';
 import Editor from '@monaco-editor/react';
-import api from '../../services/api';
+import api, { getWebSocketURL } from '../../services/api';
 
 export default function LiveSession() {
     const { sessionId } = useParams();
@@ -60,8 +60,7 @@ export default function LiveSession() {
 
     const startSession = () => {
         setLoading(true);
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const ws = new WebSocket(`${protocol}//${window.location.host}/api/ws/live-interview/${sessionId || 'demo'}/recruiter`);
+        const ws = new WebSocket(getWebSocketURL(`/ws/live-interview/${sessionId || 'demo'}/recruiter`));
         
         ws.onopen = () => {
             setInterviewActive(true);

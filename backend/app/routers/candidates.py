@@ -26,6 +26,21 @@ def get_candidate_profile(user: dict = Depends(require_candidate)):
     client = get_supabase()
     user_id = user["user_id"]
     
+    if user_id == DEMO_CANDIDATE_ID or not client:
+        stored = session_store.get_session(f"profile:{user_id}")
+        if not stored:
+            stored = {
+                "id": user_id,
+                "role": "candidate",
+                "full_name": "Demo Candidate",
+                "email": "demo.candidate@skillbridge.dev",
+                "phone": "1234567890",
+                "college": "Skill University",
+                "graduation_year": 2024,
+                "degree": "B.S. CS"
+            }
+        return stored
+        
     # Needs to join custom table and profiles
     
     profile_resp = client.table("profiles").select("*").eq("id", user_id).single().execute()
@@ -41,6 +56,30 @@ def update_candidate_profile(profile_data: CandidateProfileUpdate, user: dict = 
     client = get_supabase()
     user_id = user["user_id"]
     
+    if user_id == DEMO_CANDIDATE_ID or not client:
+        stored = session_store.get_session(f"profile:{user_id}") or {
+            "id": user_id,
+            "role": "candidate",
+            "full_name": "Demo Candidate",
+            "email": "demo.candidate@skillbridge.dev",
+            "phone": "1234567890",
+            "college": "Skill University",
+            "graduation_year": 2024,
+            "degree": "B.S. CS"
+        }
+        if profile_data.full_name is not None:
+            stored["full_name"] = profile_data.full_name
+        if profile_data.phone is not None:
+            stored["phone"] = profile_data.phone
+        if profile_data.college is not None:
+            stored["college"] = profile_data.college
+        if profile_data.graduation_year is not None:
+            stored["graduation_year"] = profile_data.graduation_year
+        if profile_data.degree is not None:
+            stored["degree"] = profile_data.degree
+        session_store.save_session(f"profile:{user_id}", stored)
+        return {"message": "Profile updated successfully"}
+        
     profile_updates = {}
     if profile_data.full_name is not None:
         profile_updates["full_name"] = profile_data.full_name
@@ -258,6 +297,8 @@ def get_passport(user: dict = Depends(require_candidate)):
         return cached_passport
     
     client = get_supabase()
+    if not client:
+        raise HTTPException(status_code=404, detail="No passport found")
     resp = client.table("skill_passports").select("*").eq("candidate_id", user_id).order("issued_at", desc=True).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="No passport found")
@@ -274,6 +315,8 @@ def get_roadmap(user: dict = Depends(require_candidate)):
         return cached_roadmap
     
     client = get_supabase()
+    if not client:
+        raise HTTPException(status_code=404, detail="No roadmap found")
     resp = client.table("improvement_roadmaps").select("*").eq("candidate_id", user_id).order("created_at", desc=True).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="No roadmap found")

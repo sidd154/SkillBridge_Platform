@@ -47,6 +47,30 @@ def is_valid_work_email(email: str) -> bool:
 @router.post("/register/candidate")
 async def register_candidate(user: CandidateRegisterBase):
     client = get_supabase()
+    
+    # --- DEMO BYPASS START ---
+    if not client:
+        from app.services import session_store
+        import uuid
+        user_id = str(uuid.uuid4())
+        user_dict = {
+            "id": user_id,
+            "email": user.email,
+            "password": user.password,
+            "full_name": user.full_name,
+            "role": "candidate",
+            "college": user.college,
+            "graduation_year": user.graduation_year,
+            "degree": user.degree,
+            "phone": user.phone,
+            "is_verified": True
+        }
+        session_store.save_session(f"user:{user.email}", user_dict)
+        session_store.save_session(f"user_by_id:{user_id}", user_dict)
+        session_store.save_session(f"profile:{user_id}", user_dict)
+        return {"message": "Candidate registered successfully."}
+    # --- DEMO BYPASS END ---
+    
     try:
         response = client.auth.sign_up({
             "email": user.email,
@@ -83,6 +107,27 @@ async def register_recruiter(user: RecruiterRegisterBase, background_tasks: Back
     
     if not is_valid_work_email(user.work_email):
         raise HTTPException(status_code=400, detail="Personal email domains are not allowed.")
+        
+    # --- DEMO BYPASS START ---
+    if not client:
+        from app.services import session_store
+        import uuid
+        user_id = str(uuid.uuid4())
+        user_dict = {
+            "id": user_id,
+            "email": user.work_email,
+            "password": user.password,
+            "full_name": user.full_name,
+            "role": "recruiter",
+            "company_name": user.company_name,
+            "company_size": user.company_size,
+            "designation": user.designation,
+            "is_verified": True
+        }
+        session_store.save_session(f"user:{user.work_email}", user_dict)
+        session_store.save_session(f"user_by_id:{user_id}", user_dict)
+        return {"message": "Recruiter registered successfully!"}
+    # --- DEMO BYPASS END ---
     
     try:
         response = client.auth.sign_up({
@@ -161,6 +206,22 @@ async def login(data: LoginBase):
             "role": "recruiter",
             "is_verified": True
         }
+
+    # --- DEMO BYPASS: Check local session store first ---
+    from app.services import session_store
+    stored_user = session_store.get_session(f"user:{data.email}")
+    if stored_user:
+        if stored_user.get("password") == data.password:
+            role = stored_user.get("role", "candidate")
+            token = f"demo-token-{role}"
+            return {
+                "user": stored_user,
+                "token": token,
+                "role": role,
+                "is_verified": stored_user.get("is_verified", True)
+            }
+        else:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
 
     # Strict DB Login
     client = get_supabase()

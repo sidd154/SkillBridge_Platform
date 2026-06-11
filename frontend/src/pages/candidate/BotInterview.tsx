@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Mic, BrainCircuit, Activity, StopCircle, Maximize2, Terminal, Loader2, Play } from 'lucide-react';
 import Editor from '@monaco-editor/react';
+import { getWebSocketURL } from '../../services/api';
 
 export default function BotInterview() {
     const [searchParams] = useSearchParams();
@@ -93,8 +94,7 @@ export default function BotInterview() {
 
     const startInterview = () => {
         setLoading(true);
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const ws = new WebSocket(`${protocol}//${window.location.host}/api/ws/live-interview/${sessionId}/candidate`);
+        const ws = new WebSocket(getWebSocketURL(`/ws/live-interview/${sessionId}/candidate`));
         
         ws.onopen = () => {
             setInterviewActive(true);

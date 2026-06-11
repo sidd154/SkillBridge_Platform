@@ -91,6 +91,47 @@ class EndSessionRequest(BaseModel):
 @router.post("/interviews/{session_id}/end")
 def end_interview(session_id: str, req: EndSessionRequest, background_tasks: BackgroundTasks, user: dict = Depends(require_recruiter)):
     client = get_supabase()
+    user_id = user["user_id"]
+    
+    # --- DEMO BYPASS START ---
+    from app.services import session_store
+    cached_session = session_store.get_session(f"interview_session:{session_id}")
+    if cached_session or user_id == "00000000-0000-0000-0000-000000000002" or not client:
+        if not cached_session:
+            cached_session = {
+                "id": session_id,
+                "application_id": "demo-app-id",
+                "status": "completed",
+                "candidate_id": "00000000-0000-0000-0000-000000000001"
+            }
+        else:
+            cached_session["status"] = "completed"
+        session_store.save_session(f"interview_session:{session_id}", cached_session)
+        
+        # update application status to interview_done
+        app_id = cached_session.get("application_id")
+        if app_id:
+            all_sessions = session_store.get_all_sessions()
+            for key, val in all_sessions.items():
+                if key.startswith("applications:") and isinstance(val, list):
+                    for app in val:
+                        if app.get("id") == app_id:
+                            app["status"] = "interview_done"
+                            session_store.save_session(key, val)
+                            break
+                            
+        state = {
+            "interview_session_id": session_id,
+            "transcript": req.transcript,
+            "code_snapshot": req.code_snapshot,
+            "passport_skills": [],
+            "job_description": "Technical Interview",
+            "recruiter_mcqs": []
+        }
+        background_tasks.add_task(summarizer_graph.invoke, state)
+        return {"status": "summarizing"}
+    # --- DEMO BYPASS END ---
+    
     # Ensure it's marked as complete immediately
     client.table("interview_sessions").update({"status": "completed"}).eq("id", session_id).execute()
     
@@ -113,6 +154,17 @@ def end_interview(session_id: str, req: EndSessionRequest, background_tasks: Bac
 @router.get("/interviews/{session_id}/summary")
 def get_interview_summary(session_id: str, user: dict = Depends(require_recruiter)):
     client = get_supabase()
+    user_id = user["user_id"]
+    
+    # --- DEMO BYPASS START ---
+    from app.services import session_store
+    cached_session = session_store.get_session(f"interview_session:{session_id}")
+    if cached_session or user_id == "00000000-0000-0000-0000-000000000002" or not client:
+        if cached_session and cached_session.get("summary"):
+            return {"id": session_id, "summary": cached_session["summary"]}
+        return {"id": session_id, "summary": None, "status": "processing"}
+    # --- DEMO BYPASS END ---
+    
     resp = client.table("interview_sessions").select("summary").eq("id", session_id).single().execute()
     if resp.data and resp.data.get("summary"):
         return {"id": session_id, "summary": resp.data["summary"]}

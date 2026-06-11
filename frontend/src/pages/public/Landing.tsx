@@ -19,7 +19,7 @@ function FallingResume({
         <motion.img
             src={`/images/resume${config.textureIdx}.png`}
             alt="Resume"
-            className="absolute rounded shadow-[0_30px_60px_rgba(0,0,0,0.8)] object-contain origin-center grayscale-[0.8] invert opacity-40 brightness-75"
+            className="absolute rounded shadow-[0_15px_35px_rgba(0,0,0,0.12)] object-contain origin-center opacity-30 border border-slate-100 bg-white"
             style={{ 
                 top: '50%', 
                 left: '50%',
@@ -30,7 +30,7 @@ function FallingResume({
                 width: '18vw',
                 minWidth: '200px',
                 pointerEvents: 'none',
-                filter: 'drop-shadow(0 0 20px rgba(232,168,48,0.05))'
+                filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.06))'
             }}
         />
     );
@@ -44,7 +44,7 @@ function FinalVerifiedResume({ scrollYProgress, viewportHeight }: { scrollYProgr
         <motion.img
             src="/images/resume1.png"
             alt="Final Resume"
-            className="absolute shadow-[0_0_80px_rgba(232,168,48,0.15)] rounded object-contain grayscale-[0.5] invert brightness-[0.85]"
+            className="absolute shadow-[0_30px_70px_rgba(0,0,0,0.15)] rounded object-contain border border-slate-200 bg-white"
             style={{
                 top: '50%',
                 left: '50%',
@@ -70,7 +70,7 @@ function VerifiedStamp({ scrollYProgress }: { scrollYProgress: MotionValue<numbe
         <motion.img
             src="/images/verified_flat.png"
             alt="Verified Ink Stamp"
-            className="absolute"
+            className="absolute opacity-90"
             style={{
                 top: '50%',
                 left: '50%',
@@ -84,15 +84,13 @@ function VerifiedStamp({ scrollYProgress }: { scrollYProgress: MotionValue<numbe
                 maxWidth: '260px',
                 pointerEvents: 'none',
                 zIndex: 20,
-                mixBlendMode: 'screen',
-                filter: 'invert(1) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.2)',
+                mixBlendMode: 'multiply',
+                filter: 'contrast(1.2) brightness(1.05)', // preserve vibrant red color and push off-white pixels to pure white for perfect transparency
                 objectFit: 'contain',
             }}
         />
     );
 }
-
-
 
 // --- MAIN WRAPPER --- //
 
@@ -126,34 +124,34 @@ export default function Landing() {
     const opPage4 = useTransform(scrollYProgress, [0, 0.85, 0.95, 1], [0, 0, 1, 1]);
 
     return (
-        <div className="relative w-full h-[400vh] bg-fintech-base font-body text-fintech-cream">
+        <div className="relative w-full h-[400vh] bg-slate-50 font-body text-slate-800">
             <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center items-center">
                 
                 {/* GLOBAL NAV */}
-                <nav className="absolute top-0 w-full flex justify-between items-center px-10 py-6 z-50 bg-fintech-surface/80 backdrop-blur-xl border-b border-fintech-border shadow-xl">
+                <nav className="absolute top-0 w-full flex justify-between items-center px-10 py-6 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-sm">
                     <div className="flex items-center space-x-3 group">
-                        <div className="text-fintech-amber p-1.5 border border-fintech-amber/20 rounded shadow-[0_0_10px_rgba(232,168,48,0.2)] bg-fintech-base transition-colors group-hover:bg-fintech-amber/10">
+                        <div className="text-slate-900 p-1.5 border border-slate-200 rounded shadow-[0_4px_10px_rgba(0,0,0,0.05)] bg-slate-50 transition-colors group-hover:bg-slate-100">
                             <Hexagon className="w-6 h-6" />
                         </div>
-                        <span className="text-3xl font-editorial tracking-wide">
+                        <span className="text-3xl font-editorial tracking-wide text-slate-900">
                             SkillBridge
                         </span>
                     </div>
                     <div className="flex space-x-6 items-center">
-                        <Link to="/login" className="text-sm font-terminal uppercase tracking-[0.2em] text-fintech-ash hover:text-fintech-amber transition-colors flex items-center space-x-2">
+                        <Link to="/login" className="text-sm font-terminal uppercase tracking-[0.2em] text-slate-600 hover:text-slate-900 transition-colors flex items-center space-x-2">
                             <Terminal className="w-4 h-4" />
                             <span>Login</span>
                         </Link>
                         <div className="group relative">
-                            <button className="px-6 py-3 bg-fintech-amber text-fintech-base font-editorial font-bold text-lg rounded hover:bg-fintech-amber-hover transition-colors shadow-[0_0_20px_rgba(232,168,48,0.2)] flex items-center space-x-2">
+                            <button className="px-6 py-3 bg-slate-900 text-white font-editorial font-bold text-lg rounded hover:bg-slate-855 transition-colors shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center space-x-2">
                                 <span>Sign Up</span>
                                 <ArrowRight className="w-4 h-4" />
                             </button>
-                            <div className="absolute right-0 mt-3 w-56 bg-fintech-surface rounded shadow-2xl border border-fintech-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <Link to="/register/candidate" className="block px-6 py-4 text-[11px] font-terminal uppercase tracking-widest text-fintech-cream hover:bg-[#1E212E] hover:text-fintech-amber border-b border-fintech-border transition">
+                            <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-2xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <Link to="/register/candidate" className="block px-6 py-4 text-[11px] font-terminal uppercase tracking-widest text-slate-800 hover:bg-slate-50 hover:text-slate-905 border-b border-slate-100 transition rounded-t-xl">
                                     Candidate Sign Up
                                 </Link>
-                                <Link to="/register/recruiter" className="block px-6 py-4 text-[11px] font-terminal uppercase tracking-widest text-[#63A583] hover:bg-[#1E212E] hover:text-[#78C49F] transition">
+                                <Link to="/register/recruiter" className="block px-6 py-4 text-[11px] font-terminal uppercase tracking-widest text-emerald-700 hover:bg-slate-50 hover:text-emerald-800 transition rounded-b-xl">
                                     Recruiter Sign Up
                                 </Link>
                             </div>
@@ -162,7 +160,7 @@ export default function Landing() {
                 </nav>
 
                 {/* 3D SCROLLYTELLING ELEMENTS */}
-                <div className="absolute inset-0 z-0 pointer-events-none perspective-[1000px] bg-[radial-gradient(circle_at_center,rgba(232,168,48,0.03)_0%,transparent_50%)]">
+                <div className="absolute inset-0 z-0 pointer-events-none perspective-[1000px] bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.01)_0%,transparent_60%)]">
                     {resumesConfig.map((config, i) => (
                         <FallingResume key={i} scrollYProgress={scrollYProgress} config={config} />
                     ))}
@@ -175,13 +173,13 @@ export default function Landing() {
                     style={{ opacity: opPage1 }} 
                     className="absolute w-full h-screen flex flex-col justify-center items-center text-center px-6 z-30 pointer-events-none"
                 >
-                    <div className="bg-[#181B26] p-12 border border-fintech-border shadow-[0_30px_100px_rgba(0,0,0,0.95)] rounded-xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-2 h-full bg-fintech-amber"></div>
-                        <h1 className="text-5xl md:text-7xl font-editorial leading-tight tracking-wide text-fintech-cream mb-6 drop-shadow-lg">
+                    <div className="bg-white/95 p-12 border border-slate-200 shadow-[0_30px_70px_rgba(0,0,0,0.06)] rounded-2xl relative overflow-hidden backdrop-blur-md max-w-3xl">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-slate-900"></div>
+                        <h1 className="text-5xl md:text-7xl font-editorial leading-tight tracking-wide text-slate-900 mb-6">
                             Stop Relying on <br/>
-                            <span className="text-fintech-amber font-medium italic">Unverified Paper.</span>
+                            <span className="text-slate-700 font-medium italic">Unverified Paper.</span>
                         </h1>
-                        <p className="text-lg text-fintech-ash font-terminal tracking-wider max-w-2xl mx-auto uppercase">
+                        <p className="text-lg text-slate-500 font-terminal tracking-wider max-w-2xl mx-auto uppercase">
                             The legacy recruitment model is compromised.<br/> 
                             Scroll to initialize the SkillBridge Verification Ledger.
                         </p>
@@ -192,12 +190,12 @@ export default function Landing() {
                     style={{ opacity: opPage2 }} 
                     className="absolute w-full h-screen flex flex-col justify-center items-start px-12 lg:px-32 text-left z-30 pointer-events-none"
                 >
-                    <div className="bg-[#181B26] p-10 rounded-xl border border-fintech-border shadow-[0_30px_100px_rgba(0,0,0,0.95)] relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-fintech-amber"></div>
-                        <h2 className="text-2xl font-terminal uppercase tracking-[0.2em] text-fintech-amber mb-4">
+                    <div className="bg-white/95 p-10 rounded-2xl border border-slate-200 shadow-[0_30px_70px_rgba(0,0,0,0.06)] relative overflow-hidden backdrop-blur-md">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-slate-900"></div>
+                        <h2 className="text-2xl font-terminal uppercase tracking-[0.2em] text-slate-900 mb-4 font-semibold">
                             System Active // Agentic Parsing
                         </h2>
-                        <p className="text-xl font-editorial text-fintech-cream max-w-md leading-relaxed">
+                        <p className="text-xl font-editorial text-slate-700 max-w-md leading-relaxed">
                             Our LangGraph nodes automatically ingest resumes, discarding fluff and constructing a strict, verified telemetry profile.
                         </p>
                     </div>
@@ -207,12 +205,12 @@ export default function Landing() {
                     style={{ opacity: opPage3 }} 
                     className="absolute w-full h-screen flex flex-col justify-center items-end px-12 lg:px-32 text-right z-30 pointer-events-none"
                 >
-                    <div className="bg-[#181B26] p-10 rounded-xl border border-fintech-border shadow-[0_30px_100px_rgba(0,0,0,0.95)] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-1 h-full bg-[#63A583]"></div>
-                        <h2 className="text-2xl font-terminal uppercase tracking-[0.2em] text-[#63A583] mb-4">
+                    <div className="bg-white/95 p-10 rounded-2xl border border-slate-200 shadow-[0_30px_70px_rgba(0,0,0,0.06)] relative overflow-hidden backdrop-blur-md">
+                        <div className="absolute top-0 right-0 w-1 h-full bg-emerald-600"></div>
+                        <h2 className="text-2xl font-terminal uppercase tracking-[0.2em] text-emerald-700 mb-4 font-semibold">
                             Co-Pilot // Sandbox Validation
                         </h2>
-                        <p className="text-xl font-editorial text-fintech-cream max-w-md ml-auto leading-relaxed">
+                        <p className="text-xl font-editorial text-slate-700 max-w-md ml-auto leading-relaxed">
                             WebRTC-enabled algorithmic evaluators conduct live audio coding tests. Only candidates passing standard deviation checks reach your desk.
                         </p>
                     </div>
@@ -222,17 +220,17 @@ export default function Landing() {
                     style={{ opacity: opPage4 }} 
                     className="absolute w-full h-screen flex flex-col justify-end pb-40 items-center text-center z-40"
                 >
-                    <div className="bg-[#181B26] p-12 rounded-xl border border-fintech-border shadow-[0_30px_100px_rgba(0,0,0,0.95)] max-w-4xl w-full mx-auto relative overflow-hidden">
-                        <ShieldCheck className="w-16 h-16 text-fintech-amber mx-auto mb-8 drop-shadow-lg opacity-80" />
-                        <h1 className="text-4xl md:text-6xl font-editorial text-fintech-cream mb-8 tracking-wide font-medium">
-                            Hire with <span className="italic text-fintech-amber">Absolute Certainty.</span>
+                    <div className="bg-white/95 p-12 rounded-2xl border border-slate-200 shadow-[0_30px_70px_rgba(0,0,0,0.06)] max-w-4xl w-full mx-auto relative overflow-hidden backdrop-blur-md">
+                        <ShieldCheck className="w-16 h-16 text-slate-900 mx-auto mb-8 opacity-90" />
+                        <h1 className="text-4xl md:text-6xl font-editorial text-slate-900 mb-8 tracking-wide font-medium">
+                            Hire with <span className="italic text-slate-700">Absolute Certainty.</span>
                         </h1>
                         
                         <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12 pointer-events-auto">
-                            <Link to="/register/candidate" className="w-full sm:w-auto px-8 py-5 bg-transparent border border-fintech-amber text-fintech-amber font-terminal text-[13px] uppercase tracking-[0.2em] rounded hover:bg-fintech-amber/10 transition shadow-[0_0_15px_rgba(232,168,48,0.1)]">
+                            <Link to="/register/candidate" className="w-full sm:w-auto px-8 py-5 bg-transparent border border-slate-350 text-slate-700 font-terminal text-[13px] uppercase tracking-[0.2em] rounded hover:bg-slate-50 transition shadow-[0_0_15px_rgba(0,0,0,0.02)]">
                                 Sign Up as Candidate
                             </Link>
-                            <Link to="/register/recruiter" className="w-full sm:w-auto px-8 py-5 bg-fintech-amber text-fintech-base font-editorial font-bold text-lg rounded hover:bg-fintech-amber-hover transition shadow-[0_0_20px_rgba(232,168,48,0.3)] flex items-center justify-center space-x-3">
+                            <Link to="/register/recruiter" className="w-full sm:w-auto px-8 py-5 bg-slate-900 text-white font-editorial font-bold text-lg rounded hover:bg-slate-800 transition shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center space-x-3">
                                 <span>Sign Up as Recruiter</span>
                                 <Briefcase className="w-5 h-5" />
                             </Link>

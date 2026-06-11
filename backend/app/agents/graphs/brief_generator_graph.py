@@ -62,6 +62,7 @@ def save_brief_node(state: BriefGeneratorState):
         
     client = get_supabase()
     job_id = state.get("job_id")
+    recruiter_id = state.get("recruiter_id")
     
     insert_data = {
         "job_id": job_id,
@@ -71,7 +72,9 @@ def save_brief_node(state: BriefGeneratorState):
         "instructions": state.get("instructions")
     }
     
-    if state.get("recruiter_id") == settings.DEMO_RECRUITER_ID:
+    if recruiter_id == settings.DEMO_RECRUITER_ID or not client:
+        from app.services import session_store
+        session_store.save_session(f"brief:{job_id}", insert_data)
         return {"instructions": state.get("instructions")}
 
     if client:

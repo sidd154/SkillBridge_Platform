@@ -18,6 +18,7 @@ build/
 backend/storage/
 backend/static/
 backend/demo_local_store.json
+demo_local_store.json
 .npm
 .DS_Store
 

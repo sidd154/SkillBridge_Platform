@@ -14,6 +14,8 @@ class JobMatchingState(TypedDict):
 
 def load_jobs_node(state: JobMatchingState):
     client = get_supabase()
+    if not client:
+        return {"all_active_jobs": []}
     resp = client.table("jobs").select("*, recruiters!inner(company_name)").eq("is_active", True).execute()
     return {"all_active_jobs": resp.data if resp.data else []}
 
