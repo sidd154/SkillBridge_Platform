@@ -28,7 +28,7 @@ def create_job(job_data: JobCreate, background_tasks: BackgroundTasks, user: dic
     
     # --- DEMO BYPASS START ---
     stored_user = session_store.get_session(f"user_by_id:{user_id}")
-    if stored_user or user_id == "00000000-0000-0000-0000-000000000002":
+    if stored_user or user_id == "00000000-0000-0000-0000-000000000002" or not client:
         job_id = str(uuid.uuid4())
         
         job_dict = {
@@ -146,7 +146,8 @@ def get_job_applicants(job_id: str, user: dict = Depends(require_recruiter)):
 
     # --- DEMO BYPASS: check if this is a demo job first ---
     is_demo_job = False
-    if user_id == DEMO_RECRUITER_ID:
+    stored_recruiter = session_store.get_session(f"user_by_id:{user_id}")
+    if user_id == DEMO_RECRUITER_ID or not client or stored_recruiter:
         demo_jobs = session_store.get_session(f"demo_jobs_{user_id}") or []
         job_match = next((j for j in demo_jobs if j.get("id") == job_id), None)
         if job_match:
@@ -161,7 +162,7 @@ def get_job_applicants(job_id: str, user: dict = Depends(require_recruiter)):
     
     applicants = []
 
-    if not is_demo_job:
+    if not is_demo_job and client:
         # Get all applications for this job, joining candidates (and profiles if needed)
         resp = client.table("applications").select("*, candidates(*, profiles(*)), interview_sessions(id, status)").eq("job_id", job_id).order("created_at", desc=True).execute()
         
@@ -176,21 +177,28 @@ def get_job_applicants(job_id: str, user: dict = Depends(require_recruiter)):
                 del app["candidates"]["profiles"]
     
     # Merge demo candidate applications from session_store (they can't be in Supabase due to auth FK)
-    demo_apps = session_store.get_session(f"applications:{DEMO_CANDIDATE_ID}") or []
-    demo_apps_for_job = [a for a in demo_apps if a.get("job_id") == job_id]
+    demo_apps_for_job = []
+    all_sessions = session_store.get_all_sessions()
+    for key, val in all_sessions.items():
+        if key.startswith("applications:") and isinstance(val, list):
+            for app in val:
+                if app.get("job_id") == job_id:
+                    demo_apps_for_job.append(app)
     
     for demo_app in demo_apps_for_job:
         # Build a candidate object the frontend expects
-        demo_skills_data = session_store.get_session(f"skills:{DEMO_CANDIDATE_ID}") or {}
-        demo_passport = session_store.get_session(f"passport:{DEMO_CANDIDATE_ID}")
+        demo_candidate_id = demo_app.get("candidate_id", DEMO_CANDIDATE_ID)
+        demo_skills_data = session_store.get_session(f"skills:{demo_candidate_id}") or {}
+        demo_passport = session_store.get_session(f"passport:{demo_candidate_id}")
+        prof = session_store.get_session(f"profile:{demo_candidate_id}") or {}
         demo_candidate = {
-            "id": DEMO_CANDIDATE_ID,
-            "full_name": "Demo Candidate",
-            "email": "demo.candidate@skillbridge.dev",
-            "phone": "0000000000",
-            "college": "Demo University",
-            "graduation_year": 2024,
-            "degree": "B.Tech",
+            "id": demo_candidate_id,
+            "full_name": prof.get("full_name", "Demo Candidate"),
+            "email": prof.get("email", "demo.candidate@skillbridge.dev"),
+            "phone": prof.get("phone", "0000000000"),
+            "college": prof.get("college", "Demo University"),
+            "graduation_year": prof.get("graduation_year", 2024),
+            "degree": prof.get("degree", "B.Tech"),
             "extracted_skills": demo_skills_data.get("extracted_skills", []),
             "github_link": demo_skills_data.get("github_link", ""),
             "leetcode_link": demo_skills_data.get("leetcode_link", ""),

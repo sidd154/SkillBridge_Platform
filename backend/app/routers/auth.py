@@ -213,7 +213,8 @@ async def login(data: LoginBase):
     if stored_user:
         if stored_user.get("password") == data.password:
             role = stored_user.get("role", "candidate")
-            token = f"demo-token-{role}"
+            user_id = stored_user.get("id")
+            token = f"demo-token-{role}-{user_id}"
             return {
                 "user": stored_user,
                 "token": token,

@@ -32,6 +32,12 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
          return {"user_id": "00000000-0000-0000-0000-000000000001", "role": "candidate"}
     if token == "demo-token-recruiter":
          return {"user_id": "00000000-0000-0000-0000-000000000002", "role": "recruiter"}
+    if token and token.startswith("demo-token-"):
+         parts = token.split("-")
+         if len(parts) >= 4:
+             role = parts[2]
+             user_id = "-".join(parts[3:])
+             return {"user_id": user_id, "role": role}
 
     if user_id:
         if user_id == "00000000-0000-0000-0000-000000000001":

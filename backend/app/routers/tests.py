@@ -171,6 +171,8 @@ def get_test_session(session_id: str, user: dict = Depends(require_candidate)):
     
     user_id = user["user_id"]
     client = get_supabase()
+    if not client:
+        raise HTTPException(status_code=404, detail="Test session not found. Please parse your resume first.")
     resp = client.table("test_sessions").select("*").eq("id", session_id).eq("candidate_id", user_id).single().execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Test session not found. Please parse your resume first.")
@@ -253,8 +255,11 @@ async def submit_test(session_id: str, data: AnswersModel, background_tasks: Bac
     # Check session_store first (demo user sessions are stored in-memory)
     from app.services import session_store
     cached_session = session_store.get_session(session_id)
+    client = get_supabase()
     
-    if cached_session:
+    if cached_session or not client:
+        if not cached_session:
+            raise HTTPException(status_code=404, detail="Test session not found")
         if cached_session.get("answers"):
             raise HTTPException(status_code=400, detail="Test already submitted")
         cached_session["answers"] = data.answers
@@ -268,7 +273,6 @@ async def submit_test(session_id: str, data: AnswersModel, background_tasks: Bac
         return {"message": "Test submitted. Agent 4 is evaluating your results."}
     
     # Real user: read from Supabase
-    client = get_supabase()
     resp = client.table("test_sessions").select("*").eq("id", session_id).eq("candidate_id", user_id).single().execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Test session not found")

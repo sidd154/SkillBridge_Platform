@@ -66,14 +66,31 @@ def get_waiting_interviews(user: dict = Depends(require_recruiter)):
 
 @router.post("/interviews/start/{application_id}")
 def start_interview(application_id: str, background_tasks: BackgroundTasks, user: dict = Depends(require_candidate)):
-    # Demo bypass
-    if user["user_id"] == "00000000-0000-0000-0000-000000000001":
-        import uuid
-        demo_session_id = str(uuid.uuid4())
-        # The frontend will use this to connect to the WS
-        return {"interview_session_id": demo_session_id}
-        
+    user_id = user["user_id"]
     client = get_supabase()
+    
+    # Demo bypass
+    if user_id == "00000000-0000-0000-0000-000000000001" or not client:
+        from app.services import session_store
+        import uuid
+        demo_session_id = None
+        apps = session_store.get_session(f"applications:{user_id}") or []
+        for app in apps:
+            if app.get("id") == application_id:
+                demo_session_id = app.get("interview_session_id")
+                break
+        if not demo_session_id:
+            # Check all sessions
+            all_sessions = session_store.get_all_sessions()
+            for key, val in all_sessions.items():
+                if key.startswith("applications:") and isinstance(val, list):
+                    for app in val:
+                        if app.get("id") == application_id:
+                            demo_session_id = app.get("interview_session_id")
+                            break
+        if not demo_session_id:
+            demo_session_id = str(uuid.uuid4())
+        return {"interview_session_id": demo_session_id}
     resp = client.table("interview_sessions").insert({
         "application_id": application_id,
         "status": "in_progress"

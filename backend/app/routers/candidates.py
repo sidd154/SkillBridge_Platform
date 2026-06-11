@@ -115,11 +115,11 @@ async def upload_resume(
     user: dict = Depends(require_candidate)
 ):
     print("====== ENDPOINT HIT ======", flush=True)
+    client = get_supabase()
     user_id = user["user_id"]
     file_content = await resume.read()
-    
-    # ── DEMO USER: all Supabase writes are skipped (fake UUID not in auth.users) ──
-    if user_id == DEMO_CANDIDATE_ID:
+    # ── DEMO USER OR OFFLINE DB: all Supabase writes are skipped ──
+    if user_id == DEMO_CANDIDATE_ID or not client:
         import os, io, json, uuid as _uuid
         import pdfplumber
         from langchain_openai import ChatOpenAI
@@ -330,8 +330,8 @@ def get_job_matches(user: dict = Depends(require_candidate)):
     candidate_skills = []
     verified_skills = []
     
-    # For demo user: get skills from session_store (no Supabase row)
-    if user_id == DEMO_CANDIDATE_ID:
+    # For demo user or offline DB: get skills from session_store
+    if user_id == DEMO_CANDIDATE_ID or not client:
         from app.services import session_store
         cached_skills = session_store.get_session(f"skills:{user_id}")
         if not cached_skills:
@@ -359,12 +359,13 @@ def get_job_matches(user: dict = Depends(require_candidate)):
     jobs = []
     
     # 3a. Supabase job_briefs (for verified recruiter jobs)
-    try:
-        jobs_resp = client.table("job_briefs").select("job_id, title, role_description, tech_stack, criteria").execute()
-        if jobs_resp.data:
-            jobs.extend(jobs_resp.data)
-    except Exception:
-        pass
+    if client:
+        try:
+            jobs_resp = client.table("job_briefs").select("job_id, title, role_description, tech_stack, criteria").execute()
+            if jobs_resp.data:
+                jobs.extend(jobs_resp.data)
+        except Exception:
+            pass
     
     # 3b. Demo jobs from session_store (always include these so demo candidate sees matches)
     from app.services import session_store as ss

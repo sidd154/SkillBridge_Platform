@@ -17,7 +17,11 @@ def get_recruiter_profile(user: dict = Depends(require_recruiter)):
     client = get_supabase()
     user_id = user["user_id"]
     # --- DEMO BYPASS START ---
-    if user_id == "00000000-0000-0000-0000-000000000002":
+    if user_id == "00000000-0000-0000-0000-000000000002" or not client:
+        from app.services import session_store
+        stored_user = session_store.get_session(f"user_by_id:{user_id}")
+        if stored_user:
+            return stored_user
         return {
             "id": user_id, "role": "recruiter", "full_name": "Demo Recruiter", "email": "demo.recruiter@techcorp.com",
             "phone": "0000000000", "company_name": "Tech Corp", "company_domain": "techcorp.com", 

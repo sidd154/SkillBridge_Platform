@@ -43,9 +43,10 @@ def _is_demo_job(job_id: str) -> bool:
 @router.post("")
 def create_application(app_data: ApplicationCreate, user: dict = Depends(require_candidate)):
     user_id = user["user_id"]
+    client = get_supabase()
 
     # Demo user: check session_store for passport, store application in memory
-    if user_id == DEMO_CANDIDATE_ID:
+    if user_id == DEMO_CANDIDATE_ID or not client:
         passport = session_store.get_session(f"passport:{user_id}")
         if not passport:
             raise HTTPException(
@@ -73,8 +74,6 @@ def create_application(app_data: ApplicationCreate, user: dict = Depends(require
         session_store.save_session(f"applications:{user_id}", apps)
         return app_obj
 
-    client = get_supabase()
-
     # Check if candidate has active passport
     cand = client.table("candidates").select("passport_id").eq("id", user_id).single().execute()
     if not cand.data or not cand.data.get("passport_id"):
@@ -98,8 +97,10 @@ def create_application(app_data: ApplicationCreate, user: dict = Depends(require
 def list_applications(user: dict = Depends(require_candidate)):
     user_id = user["user_id"]
 
+    client = get_supabase()
+
     # Demo user: return from session_store, enriched with job data
-    if user_id == DEMO_CANDIDATE_ID:
+    if user_id == DEMO_CANDIDATE_ID or not client:
         apps = session_store.get_session(f"applications:{user_id}") or []
         if apps:
             # Try to enrich with job data (first from session_store, then Supabase)
@@ -110,7 +111,6 @@ def list_applications(user: dict = Depends(require_candidate)):
                     for job in val:
                         demo_job_map[job["id"]] = job
 
-            client = get_supabase()
             for app in apps:
                 jid = app.get("job_id")
                 if jid in demo_job_map:
@@ -125,8 +125,6 @@ def list_applications(user: dict = Depends(require_candidate)):
                     except Exception:
                         app["jobs"] = {"title": "Job Listing", "location": "Remote"}
         return apps
-
-    client = get_supabase()
     if not client:
         return []
     resp = client.table("applications").select("*, jobs(*)").eq("candidate_id", user_id).order("created_at", desc=True).execute()
@@ -137,8 +135,10 @@ def list_applications(user: dict = Depends(require_candidate)):
 def update_application_status(id: str, update_data: ApplicationStatusUpdate, user: dict = Depends(require_recruiter)):
     user_id = user["user_id"]
 
+    client = get_supabase()
+
     # Demo recruiter bypass: update in session_store
-    if user_id == DEMO_RECRUITER_ID:
+    if user_id == DEMO_RECRUITER_ID or not client:
         key, app = _get_demo_app(id)
         if not app:
             raise HTTPException(status_code=404, detail="Application not found")
@@ -147,8 +147,6 @@ def update_application_status(id: str, update_data: ApplicationStatusUpdate, use
         new_apps = [a if a.get("id") != id else app for a in apps]
         session_store.save_session(key, new_apps)
         return app
-
-    client = get_supabase()
     app_data = client.table("applications").select("jobs(recruiter_id)").eq("id", id).single().execute()
     if not app_data.data or app_data.data["jobs"]["recruiter_id"] != user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
@@ -161,8 +159,10 @@ def update_application_status(id: str, update_data: ApplicationStatusUpdate, use
 def request_test(id: str, user: dict = Depends(require_recruiter)):
     user_id = user["user_id"]
 
+    client = get_supabase()
+
     # Demo recruiter bypass
-    if user_id == DEMO_RECRUITER_ID:
+    if user_id == DEMO_RECRUITER_ID or not client:
         key, app = _get_demo_app(id)
         if not app:
             raise HTTPException(status_code=404, detail="Application not found")
@@ -171,8 +171,6 @@ def request_test(id: str, user: dict = Depends(require_recruiter)):
         new_apps = [a if a.get("id") != id else app for a in apps]
         session_store.save_session(key, new_apps)
         return app
-
-    client = get_supabase()
     app_data = client.table("applications").select("jobs(recruiter_id)").eq("id", id).single().execute()
     if not app_data.data or app_data.data["jobs"]["recruiter_id"] != user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
@@ -185,8 +183,10 @@ def request_test(id: str, user: dict = Depends(require_recruiter)):
 def request_interview(id: str, user: dict = Depends(require_recruiter)):
     user_id = user["user_id"]
 
+    client = get_supabase()
+
     # Demo recruiter bypass
-    if user_id == DEMO_RECRUITER_ID:
+    if user_id == DEMO_RECRUITER_ID or not client:
         key, app = _get_demo_app(id)
         if not app:
             raise HTTPException(status_code=404, detail="Application not found")
@@ -195,8 +195,6 @@ def request_interview(id: str, user: dict = Depends(require_recruiter)):
         new_apps = [a if a.get("id") != id else app for a in apps]
         session_store.save_session(key, new_apps)
         return app
-
-    client = get_supabase()
     app_data = client.table("applications").select("jobs(recruiter_id)").eq("id", id).single().execute()
     if not app_data.data or app_data.data["jobs"]["recruiter_id"] != user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
@@ -209,12 +207,14 @@ def request_interview(id: str, user: dict = Depends(require_recruiter)):
 def accept_interview(id: str, user: dict = Depends(require_candidate)):
     user_id = user["user_id"]
 
+    client = get_supabase()
+
     # Demo candidate bypass: update in session_store, create in-memory interview session
-    if user_id == DEMO_CANDIDATE_ID:
+    if user_id == DEMO_CANDIDATE_ID or not client:
         key, app = _get_demo_app(id)
         if not app:
             raise HTTPException(status_code=404, detail="Application not found")
-        if app.get("candidate_id") != DEMO_CANDIDATE_ID:
+        if app.get("candidate_id") != user_id:
             raise HTTPException(status_code=403, detail="Unauthorized")
 
         import uuid as _uuid
@@ -231,12 +231,10 @@ def accept_interview(id: str, user: dict = Depends(require_candidate)):
             "id": session_id,
             "application_id": id,
             "status": "pending",
-            "candidate_id": DEMO_CANDIDATE_ID,
+            "candidate_id": user_id,
         })
 
         return {**app, "interview_session_id": session_id}
-
-    client = get_supabase()
     app_data = client.table("applications").select("candidate_id").eq("id", id).single().execute()
     if not app_data.data or app_data.data["candidate_id"] != user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
