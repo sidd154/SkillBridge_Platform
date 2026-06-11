@@ -1,27 +1,25 @@
-# Stage 1: Build Frontend
-FROM node:18 AS frontend-builder
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ ./
-RUN npm run build
-
-# Stage 2: Serve Backend & Frontend
 FROM python:3.11-slim
+
+# Install basic compile utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy and install python requirements
-COPY backend/requirements.txt ./
+# Copy python dependencies list and install
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend application code
-COPY backend/ ./
+# Copy all backend files (which now includes the static frontend assets)
+COPY backend/ .
 
-# Copy built frontend from Stage 1 into /app/static
-COPY --from=frontend-builder /app/frontend/dist ./static
+# Create the local upload directory and ensure global read-write permissions
+# Hugging Face runs containers with non-root user (UID 1000), so we chmod 777 /app
+RUN mkdir -p /app/storage/resumes && chmod -R 777 /app
 
-# Expose port (Hugging Face Spaces runs on 7860 by default)
+# Hugging Face Spaces expects the container to run on port 7860
 EXPOSE 7860
 
-# Start FastAPI server on port 7860
+# Run the backend FastAPI server
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
