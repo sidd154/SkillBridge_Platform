@@ -24,6 +24,29 @@ class BotInterviewState(TypedDict):
 
 # Node 1: Analyze & Route
 def interview_brain_node(state: BotInterviewState):
+    # Check if OpenAI is configured
+    import os
+    openai_key = os.getenv("OPENAI_API_KEY")
+    is_openai_configured = openai_key and len(openai_key) > 30 and "your-key" not in openai_key and "your-proj" not in openai_key
+    
+    if not is_openai_configured:
+        # Fallback pre-populated demo interview flow
+        q_count = state.get("question_count", 0)
+        flow = {
+            0: ("Hello! I'm your AI interviewer. Could you please introduce yourself and tell me about your experience?", "technical", 1),
+            1: ("Thanks for sharing! Let's talk technical. How do you approach state management and optimization in React?", "technical", 2),
+            2: ("Great. How do you ensure type safety and type coverage using TypeScript on the frontend?", "technical", 3),
+            3: ("Interesting! If you were designing a RESTful API in Python (e.g. with FastAPI), how would you structure authentication?", "technical", 4),
+            4: ("Understood. Finally, how do you handle database connection pooling and query optimization under high traffic?", "outro", 5),
+            5: ("Thank you for your time! We have completed the interview session. I am summarizing your scorecard feedback now.", "ended", 6),
+        }
+        msg, next_p, next_c = flow.get(q_count, ("Thank you, the interview has completed successfully.", "ended", q_count))
+        return {
+            "next_bot_message": msg,
+            "current_phase": next_p,
+            "question_count": next_c
+        }
+
     llm = ChatOpenAI(model=settings.AI_MODEL_NAME, temperature=0.7)
     
     transcript_str = "\n".join([f"{m['role']}: {m['content']}" for m in state.get("transcript", [])])

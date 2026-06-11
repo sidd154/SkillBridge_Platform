@@ -19,6 +19,50 @@ class BriefGeneratorState(TypedDict, total=False):
     error: str
 
 def generate_brief_node(state: BriefGeneratorState):
+    # Check if OpenAI is configured
+    import os
+    openai_key = os.getenv("OPENAI_API_KEY")
+    is_openai_configured = openai_key and len(openai_key) > 30 and "your-key" not in openai_key and "your-proj" not in openai_key
+    
+    if not is_openai_configured:
+        # Fallback pre-populated demo brief
+        return {
+            "focus_areas": ["State management", "Performance", "Coding style"],
+            "recruiter_questions": [
+                {"question": "How do you handle global state in React?", "expected_keywords": ["Redux", "Zustand", "Context"]},
+                {"question": "What is the difference between useMemo and useCallback?", "expected_keywords": ["memoize", "value", "function"]},
+                {"question": "How do you structure CSS styles in React?", "expected_keywords": ["Tailwind", "CSS Modules", "Styled Components"]}
+            ],
+            "mass_mcqs": [
+                {
+                    "question": "What hook would you use to perform side effects in React?",
+                    "options": {"A": "useState", "B": "useEffect", "C": "useContext", "D": "useMemo"},
+                    "correct_answer": "B"
+                },
+                {
+                    "question": "Which of the following is true about TypeScript?",
+                    "options": {"A": "It is a superset of JavaScript", "B": "It has static typing", "C": "It compiles to clean JS", "D": "All of the above"},
+                    "correct_answer": "D"
+                },
+                {
+                    "question": "Which Tailwind class is used to apply a display flex?",
+                    "options": {"A": "flex-row", "B": "display-flex", "C": "flex", "D": "flex-box"},
+                    "correct_answer": "C"
+                },
+                {
+                    "question": "In Python, what keyword defines a function?",
+                    "options": {"A": "func", "B": "function", "C": "def", "D": "define"},
+                    "correct_answer": "C"
+                },
+                {
+                    "question": "What is FastAPI used for?",
+                    "options": {"A": "Building frontend apps", "B": "CSS styling", "C": "Web APIs in Python", "D": "Database migration"},
+                    "correct_answer": "C"
+                }
+            ],
+            "instructions": "Be friendly and evaluate standard React frontend capabilities."
+        }
+
     llm = ChatOpenAI(model=settings.AI_MODEL_NAME, temperature=0.2)
     sys_prompt = """You are an expert technical recruiter AI. Given a job description, skills, and experience required, you must construct a bot interview brief.
 Generate exactly:
